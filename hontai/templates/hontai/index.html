@@ -1,0 +1,170 @@
+{% extends "hontai/base.html" %} {% block contents %}
+<br>
+<div class='container-fluid'>
+    <div class="alert alert-dismissible alert-warning">
+        <h4 class="alert-heading">ようこそタダ飯データベースへ！</h4>
+        <p class="mb-0">京都大学の2018年度新歓で振る舞われる「タダ飯」の情報に特化したサイトです。
+            <b>放課後に毎日このサイトを覗いて楽しいタダ飯ライフを送ろう！！</b>
+        </p>
+        <hr>
+        <p>感想・バグ報告はtwitterアカウント
+            <a href="https://twitter.com/Zoniichan">@Zoniichan</a> まで！</p>
+        <p>このサイトに掲載されている情報はアプリ作者がビラを回収して手動で入力したものです。この情報を参考にしたことで生じた 不利益に対しては一切責任を持てません。ごめんね。新歓に関する詳しい内容は直接当該サークルに問い合わせてください。
+        </p>
+    </div>
+    <h1 class='text-center'>本日のおすすめタダ飯案件</h1>
+    <hr>
+    <p>飛び入り参加可能かどうか・会食場所等を勘案して当アプリ作者が超主観的に選んだものです。下の「本日のタダ飯案件」もご覧ください。</p>
+    <div class='row'>
+        <div class='col-xl-3 col-sm-12'>
+            <div class="jumbotron">
+                <h1 class="display-3 text-center">{{ today|date:"m/d" }} </h1>
+                <hr class="my-4">
+                <h3 class="text-center">{{ today|date:"l" }}</h3>
+            </div>
+        </div>
+        <div class='col-xl-9 col-sm-12'>
+            <div class="jumbotron">
+                {% if rec %}
+                <h1 class="display-3 text-center">{{ rec.time }} {{ rec.place }}集合</h1>
+                <hr class="my-4">
+                <h3 class="text-center">{{ rec.circle.name }} / {{ rec.circle.kind }}</h3>
+                {% else %}
+                <h1 class="display-3 text-center">おすすめ企画はありません</h1>
+                <hr class="my-4">
+                <h3 class="text-center">申し訳ありません</h3>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <h2 class='text-center'>本日のタダ飯案件</h2>
+    <hr>
+    <p class="text-right">
+        <span style="color:dodgerblue">
+            <i class="fas fa-male"></i>
+        </span>＝男性参加可　
+        <span style="color:plum">
+            <i class="fas fa-female"></i>
+        </span>＝女性参加可　
+        <span style="color:orange">
+            <i class="fas fa-star"></i>
+        </span>＝飛び入り参加可　
+    </p>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">集合時刻</th>
+                <th scope="col">集合場所</th>
+                <th scope="col">サークル名</th>
+                <th scope="col">種別</th>
+                <th scope="col">
+                    <div style="color:dodgerblue">
+                        <i class="fas fa-male"></i>
+                    </div>
+                </th>
+                <th scope="col">
+                    <div style="color:plum">
+                        <i class="fas fa-female"></i>
+                    </div>
+                </th>
+                <th scope="col">
+                    <div style="color:orange">
+                        <i class="fas fa-star"></i>
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for obj in today_list %}
+            {% if obj.recommend == True %}
+            <tr class='table-primary'>
+            {% else %}
+            <tr>
+            {% endif %}
+                <th scope="row">{{ obj.time }}</th>
+                <th>{{ obj.place }}</th>
+                <td>{{ obj.circle.name }}</td>
+                <td>{{ obj.circle.kind }}</td>
+                <td>{{ obj.male }}</td>
+                <td>{{ obj.female }}</td>
+                <td>{{ obj.tobiiri }}</td>
+            </tr>
+            {% if obj.note %}
+            {% if obj.recommend == True %}
+            <tr class='table-primary'>
+            {% else %}
+            <tr class='table-secondary'>
+            {% endif %}
+            <td></td>
+                <td colspan="6">
+                    {{ obj.note }}
+                </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <h2 class='text-center'>明日以降のタダ飯案件</h2>
+    <hr>
+    <p class="text-right">
+        <span style="color:dodgerblue">
+            <i class="fas fa-male"></i>
+        </span>＝男性参加可　
+        <span style="color:plum">
+            <i class="fas fa-female"></i>
+        </span>＝女性参加可　
+        <span style="color:orange">
+            <i class="fas fa-star"></i>
+        </span>＝飛び入り参加可　
+    </p>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">日付</th>
+                <th scope="col">集合時刻</th>
+                <th scope="col">集合場所</th>
+                <th scope="col">サークル名</th>
+                <th scope="col">種別</th>
+                <th scope="col">
+                    <div style="color:dodgerblue">
+                        <i class="fas fa-male"></i>
+                    </div>
+                </th>
+                <th scope="col">
+                    <div style="color:plum">
+                        <i class="fas fa-female"></i>
+                    </div>
+                </th>
+                <th scope="col">
+                    <div style="color:orange">
+                        <i class="fas fa-star"></i>
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for obj in next_list %}
+            <tr>
+                <th scope="row">{{ obj.date|date:'m/d' }}</th>
+                <th>{{ obj.time }}</th>
+                <th>{{ obj.place }}</th>
+                <td>{{ obj.circle.name }}</td>
+                <td>{{ obj.circle.kind }}</td>
+                <td>{{ obj.male }}</td>
+                <td>{{ obj.female }}</td>
+                <td>{{ obj.tobiiri }}</td>
+            </tr>
+            {% if obj.note %}
+            <tr class='table-secondary'>
+                <td></td>
+                <td colspan="7">
+                    {{ obj.note }}
+                </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock contents %}
